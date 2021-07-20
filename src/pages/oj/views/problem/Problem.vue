@@ -1,3 +1,4 @@
+
 <template>
   <div class="flex-container">
     <div id="problem-main">
@@ -299,6 +300,14 @@
           }
           // try to load problem template
           this.language = this.problem.languages[0]
+          if (typeof window !== 'undefined') {
+            /* global localStorage */
+            /* eslint no-undef: "error" */
+            const submitLanguage = localStorage.getItem('submitLanguage')
+            if (submitLanguage !== null && this.problem.languages.includes(submitLanguage)) {
+              this.language = submitLanguage
+            }
+          }
           let template = this.problem.template
           if (template && template[this.language]) {
             this.code = template[this.language]
@@ -351,6 +360,11 @@
           if (this.code.trim() === '') {
             this.code = this.problem.template[newLang]
           }
+        }
+        if (typeof window !== 'undefined') {
+          /* global localStorage */
+          /* eslint no-undef: "error" */
+          localStorage.setItem('submitLanguage', newLang)
         }
         this.language = newLang
       },
